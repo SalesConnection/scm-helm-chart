@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "scm-chart.fullname" . }}-supervisor
+  labels:
+    name: scmessenger-staging-supervisor
+  {{- include "scm-chart.labels" . | nindent 4 }}
+data:
+  queueworker.yaml: {{ .Values.supervisor.queueworkerYaml | toYaml | indent 1 }}
+  scmessenger-staging-supervisor.conf: {{ .Values.supervisor.scmessengerStagingSupervisorConf
+    | toYaml | indent 1 }}

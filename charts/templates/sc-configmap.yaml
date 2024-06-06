@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "scm-chart.fullname" . }}-config
+  labels:
+  {{- include "scm-chart.labels" . | nindent 4 }}
+data:
+  APP_DEBUG: {{ .Values.config.appDebug | quote }}
+  APP_ENV: {{ .Values.config.appEnv | quote }}
+  APP_KEY: {{ .Values.config.appKey | quote }}
+  APP_NAME: {{ .Values.config.appName | quote }}
+  APP_PORT: {{ .Values.config.appPort | quote }}
+  APP_TIMEZONE: {{ .Values.config.appTimezone | quote }}
+  APP_URL: {{ .Values.config.appUrl | quote }}
+  AWS_BUCKET: {{ .Values.config.awsBucket | quote }}
+  AWS_DEFAULT_REGION: {{ .Values.config.awsDefaultRegion | quote }}
+  CACHE_DRIVER: {{ .Values.config.cacheDriver | quote }}
+  DB_CONNECTION: {{ .Values.config.dbConnection | quote }}
+  DB_DATABASE: {{ .Values.config.dbDatabase | quote }}
+  DB_HOST: {{ .Values.config.dbHost | quote }}
+  DB_PASSWORD: {{ .Values.config.dbPassword | quote }}
+  DB_PORT: {{ .Values.config.dbPort | quote }}
+  DB_USERNAME: {{ .Values.config.dbUsername | quote }}
+  DD_ENV: {{ .Values.config.ddEnv | quote }}
+  ESMS_ENDPOINT: {{ .Values.config.esmsEndpoint | quote }}
+  LOG_CHANNEL: {{ .Values.config.logChannel | quote }}
+  LOG_SLACK_WEBHOOK_URL: {{ .Values.config.logSlackWebhookUrl | quote }}
+  QUEUE_CONNECTION: {{ .Values.config.queueConnection | quote }}
+  SQS_PREFIX: {{ .Values.config.sqsPrefix | quote }}
+  SQS_QUEUE: {{ .Values.config.sqsQueue | quote }}

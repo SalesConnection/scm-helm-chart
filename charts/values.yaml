@@ -1,0 +1,90 @@
+config:
+  appDebug: "true"
+  appEnv: local
+  appKey: ""
+  appName: SC Messenger STG
+  appPort: "8081"
+  appTimezone: UTC
+  appUrl: http://localhost
+  awsBucket: salesconnection
+  awsDefaultRegion: ap-southeast-1
+  cacheDriver: file
+  dbConnection: mysql
+  dbDatabase: scmessenger
+  dbHost: salesconnection-staging.cccdmxcdsrgz.ap-southeast-1.rds.amazonaws.com
+  dbPassword: mkBq2qzJl4xH22ouazQcNIiMMFVOaaAC
+  dbPort: "3306"
+  dbUsername: stgscmsg
+  ddEnv: staging
+  esmsEndpoint: https://esms.salesconnection.my
+  logChannel: stack
+  logSlackWebhookUrl: ""
+  queueConnection: sqs
+  sqsPrefix: https://sqs.ap-southeast-1.amazonaws.com/672944514151
+  sqsQueue: sc-message-stg
+deployment:
+  replicas: 1
+  scmessengerStagingContainer:
+    image:
+      repository: 672944514151.dkr.ecr.ap-southeast-1.amazonaws.com/sc-messenger
+      tag: v1.1.2-alpha.4
+    imagePullPolicy: Always
+kubernetesClusterDomain: cluster.local
+service:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 3000
+  type: ClusterIP
+supervisor:
+  queueworkerYaml: |-
+    enabled: "true"
+    queues:
+      - name: checkin-worker
+        enabled: "false"
+        replica: "1"
+        count: "5"
+        queue_env_key: CHECKIN_QUEUE
+      - name: import-worker
+        enabled: "false"
+        replica: "1"
+        count: "3"
+        queue_env_key: IMPORT_QUEUE
+        timeout: "300"
+      - name: reminder-worker
+        enabled: "false"
+        replica: "1"
+        count: "5"
+        connection: reminder
+      - name: laravel-seqnum
+        enabled: "false"
+        replica: "2"
+        count: "5"
+        connection: seqnum
+      - name: laravel-worker
+        enabled: "false"
+        replica: "1"
+        count: "5"
+        queue_env_key: REMINDER_QUEUE
+      - name: export-worker
+        enabled: "false"
+        replica: "1"
+        count: "3"
+        queue_env_key: EXPORT_QUEUE
+        timeout: "300"
+  scmessengerStagingSupervisorConf: |-
+    [supervisord]
+    nodaemon=true
+    [inet_http_server]
+    port = 127.0.0.1:9001
+    [program:scmessenger-staging-supervisor]
+    process_name=%(program_name)s_%(process_num)02d
+    environment=DD_TRACE_CLI_ENABLED="1",DD_TRACE_GENERATE_ROOT_SPAN="0",DD_TRACE_AUTO_FLUSH_ENABLED="1",DD_ENV="staging",DD_SERVICE="scmessenger-staging-supervisor"
+    command=/usr/local/bin/php /var/www/artisan queue:work sqs --queue=sqs --timeout=300
+    autostart=true
+    autorestart=true
+    user=root
+    numprocs=1
+    redirect_stderr=true
+    stdout_logfile=/dev/fd/1
+    stdout_logfile_maxbytes=0

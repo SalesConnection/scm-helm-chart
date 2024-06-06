@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "scm-chart.fullname" . }}-deployment
+  labels:
+  {{- include "scm-chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: scmessenger-staging
+    {{- include "scm-chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: scmessenger-staging
+      {{- include "scm-chart.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        envFrom:
+        - configMapRef:
+            name: {{ include "scm-chart.fullname" . }}-config
+        image: {{ .Values.deployment.scmessengerStagingContainer.image.repository }}:{{
+          .Values.deployment.scmessengerStagingContainer.image.tag | default .Chart.AppVersion
+          }}
+        imagePullPolicy: {{ .Values.deployment.scmessengerStagingContainer.imagePullPolicy
+          }}
+        name: scmessenger-staging-container
+        ports:
+        - containerPort: 9001
+          name: supervisor
+          protocol: TCP
+        resources: {}
+        volumeMounts:
+        - mountPath: /config
+          name: scmessenger-staging-config-volume
+      volumes:
+      - configMap:
+          name: {{ include "scm-chart.fullname" . }}-supervisor
+        name: scmessenger-staging-config-volume
