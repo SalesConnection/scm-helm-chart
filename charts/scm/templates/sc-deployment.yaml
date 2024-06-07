@@ -46,6 +46,7 @@ spec:
         volumeMounts:
         - mountPath: /config
           name: scmessenger-staging-config-volume
+      serviceAccountName: {{ include "scm-chart.fullname" . }}-service-account
       volumes:
       - configMap:
           name: {{ include "scm-chart.fullname" . }}-supervisor
