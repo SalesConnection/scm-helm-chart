@@ -38,7 +38,8 @@ service:
   type: ClusterIP
 serviceAccount:
   serviceAccount:
-    annotations: {}
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::672944514151:role/sc-messenger
 supervisor:
   queueworkerYaml: |-
     enabled: "true"
