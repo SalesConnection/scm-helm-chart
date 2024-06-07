@@ -16,6 +16,15 @@ spec:
         app: scmessenger-staging
       {{- include "scm-chart.selectorLabels" . | nindent 8 }}
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: starrocks25
+                operator: NotIn
+                values:
+                - owned
       containers:
       - env:
         - name: KUBERNETES_CLUSTER_DOMAIN

@@ -36,6 +36,9 @@ service:
     protocol: TCP
     targetPort: 3000
   type: ClusterIP
+serviceAccount:
+  serviceAccount:
+    annotations: {}
 supervisor:
   queueworkerYaml: |-
     enabled: "true"
