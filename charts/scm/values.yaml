@@ -24,7 +24,7 @@ scMessenger:
         mountPath: /config
       envFrom:
         configMapRef:
-        name: sc-messenger-staging  
+          name: sc-messenger-staging  
   configMap:
     metadata:
       name: sc-messenger-staging-configmap
