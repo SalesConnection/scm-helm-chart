@@ -6,5 +6,5 @@ metadata:
   labels:
     name: {{ .Values.scMessenger.supervisorConfigMap.metadata.labels.name }}
 data:
-  {{- toYaml .Values.scMessenger.supervisorConfigMap.data | nindent 4 }}
+  {{- toYaml .Values.scMessenger.supervisorConfigMap.data | nindent 2 }}
 {{- end }}

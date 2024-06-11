@@ -16,7 +16,7 @@ scMessenger:
       imagePullPolicy: Always
       ports: 
         name: http
-        containerPort: 8080
+        containerPort: 80
         protocol: TCP
       volumeMounts:
         name: scmessenger-staging-config-volume
