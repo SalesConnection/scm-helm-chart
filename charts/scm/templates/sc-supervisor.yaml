@@ -1,11 +1,10 @@
+{{- if .Values.scMessenger.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "scm-chart.fullname" . }}-supervisor
+  name: {{ .Values.scMessenger.supervisorConfigMap.metadata.name }}
   labels:
-    name: scmessenger-staging-supervisor
-  {{- include "scm-chart.labels" . | nindent 4 }}
+    name: {{ .Values.scMessenger.supervisorConfigMap.metadata.labels.name }}
 data:
-  queueworker.yaml: {{ .Values.supervisor.queueworkerYaml | toYaml | indent 1 }}
-  scmessenger-staging-supervisor.conf: {{ .Values.supervisor.scmessengerStagingSupervisorConf
-    | toYaml | indent 1 }}
+  {{- toYaml .Values.scMessenger.supervisorConfigMap.data | nindent 4 }}
+{{- end }}

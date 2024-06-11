@@ -1,53 +1,44 @@
+{{- if .Values.scMessenger.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "scm-chart.fullname" . }}-deployment
-  labels:
-  {{- include "scm-chart.labels" . | nindent 4 }}
+  name:  {{ .Values.scMessenger.deployment.metadata.name }}
 spec:
-  replicas: {{ .Values.deployment.replicas }}
+  replicas: {{ .Values.scMessenger.replicas }}
   selector:
     matchLabels:
-      app: scmessenger-staging
-    {{- include "scm-chart.selectorLabels" . | nindent 6 }}
+      app: {{ .Values.scMessenger.app }}   
   template:
     metadata:
       labels:
-        app: scmessenger-staging
-      {{- include "scm-chart.selectorLabels" . | nindent 8 }}
+        app: {{ .Values.scMessenger.app }}
     spec:
+      serviceAccountName: {{ .Values.scMessenger.serviceAccount.name }}
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
-            - matchExpressions:
-              - key: starrocks25
-                operator: NotIn
-                values:
-                - owned
-      containers:
-      - env:
-        - name: KUBERNETES_CLUSTER_DOMAIN
-          value: {{ quote .Values.kubernetesClusterDomain }}
-        envFrom:
-        - configMapRef:
-            name: {{ include "scm-chart.fullname" . }}-config
-        image: {{ .Values.deployment.scmessengerStagingContainer.image.repository }}:{{
-          .Values.deployment.scmessengerStagingContainer.image.tag | default .Chart.AppVersion
-          }}
-        imagePullPolicy: {{ .Values.deployment.scmessengerStagingContainer.imagePullPolicy
-          }}
-        name: scmessenger-staging-container
-        ports:
-        - containerPort: 9001
-          name: supervisor
-          protocol: TCP
-        resources: {}
-        volumeMounts:
-        - mountPath: /config
-          name: scmessenger-staging-config-volume
-      serviceAccountName: {{ include "scm-chart.fullname" . }}-service-account
+              - matchExpressions:
+                  - key: starrocks25
+                    operator: NotIn
+                    values:
+                      - owned
       volumes:
-      - configMap:
-          name: {{ include "scm-chart.fullname" . }}-supervisor
-        name: scmessenger-staging-config-volume
+        - name: {{ .Values.scMessenger.deployment.volumes.name }}
+          configMap:
+            name: {{ .Values.scMessenger.deployment.volumes.configMap.name }}
+      containers:
+        - name: {{ .Values.scMessenger.deployment.containers.name }}
+          image: {{ .Values.scMessenger.deployment.image }}
+          imagePullPolicy: {{ .Values.scMessenger.deployment.containers.imagePullPolicy }}
+          ports:
+            - name: {{ .Values.scMessenger.deployment.containers.ports.name}}
+              containerPort: {{ .Values.scMessenger.deployment.containers.ports.containerPort }}
+              protocol: {{ .Values.scMessenger.deployment.containers.ports.protocol }}
+          volumeMounts:
+            - name: {{ .Values.scMessenger.deployment.containers.volumeMounts.name }}
+              mountPath: {{ .Values.scMessenger.deployment.containers.volumeMounts.mountPath }}
+          envFrom:
+            - configMapRef:
+              name: {{ .Values.scMessenger.deployment.containers.envFrom.name }}
+{{- end }}
