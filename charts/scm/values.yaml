@@ -10,6 +10,7 @@ scMessenger:
       name: scmessenger-staging-config-volume
       configMap:
         name: scmessenger-staging-supervisor
+    serviceAccountName: scmessenger-staging-service-account
     containers:
       name: scmessenger-staging-container
       image: 672944514151.dkr.ecr.ap-southeast-1.amazonaws.com/sc-messenger:v1.1.2-alpha.4
