@@ -40,5 +40,5 @@ spec:
               mountPath: {{ .Values.scMessenger.deployment.containers.volumeMounts.mountPath }}
           envFrom:
             - configMapRef:
-              name: {{ .Values.scMessenger.deployment.containers.envFrom.configMapRef.name }}
+                name: {{ .Values.scMessenger.deployment.containers.envFrom.configMapRef.name }}
 {{- end }}
