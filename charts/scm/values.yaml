@@ -31,29 +31,29 @@ scMessenger:
       labels: 
         name: scmessenger-staging  
     data:  
-      APP_NAME: "SC Messenger STG"
-      APP_ENV: "local"
+      APP_NAME: ""
+      APP_ENV: ""
       APP_KEY: ""
-      APP_DEBUG: "true"
-      APP_URL: "http://localhost"
-      APP_TIMEZONE: "UTC"
-      APP_PORT: "8081"
-      LOG_CHANNEL: "stack"
+      APP_DEBUG: ""
+      APP_URL: ""
+      APP_TIMEZONE: ""
+      APP_PORT: ""
+      LOG_CHANNEL: ""
       LOG_SLACK_WEBHOOK_URL: ""
-      DB_CONNECTION: "mysql"
-      DB_HOST: "salesconnection-staging.cccdmxcdsrgz.ap-southeast-1.rds.amazonaws.com"
-      DB_PORT: "3306"
-      DB_DATABASE: "scmessenger"
-      DB_USERNAME: "stgscmsg"
-      DB_PASSWORD: "mkBq2qzJl4xH22ouazQcNIiMMFVOaaAC"
-      AWS_BUCKET: "salesconnection"
-      CACHE_DRIVER: "file"
-      QUEUE_CONNECTION: "sqs"
-      SQS_PREFIX: "https://sqs.ap-southeast-1.amazonaws.com/672944514151"
-      SQS_QUEUE: "sc-message-stg"
-      AWS_DEFAULT_REGION: "ap-southeast-1"
-      ESMS_ENDPOINT: "https://esms.salesconnection.my"
-      DD_ENV: "staging"
+      DB_CONNECTION: ""
+      DB_HOST: ""
+      DB_PORT: ""
+      DB_DATABASE: ""
+      DB_USERNAME: ""
+      DB_PASSWORD: ""
+      AWS_BUCKET: ""
+      CACHE_DRIVER: ""
+      QUEUE_CONNECTION: ""
+      SQS_PREFIX: ""
+      SQS_QUEUE: ""
+      AWS_DEFAULT_REGION: ""
+      ESMS_ENDPOINT: ""
+      DD_ENV: ""
   serviceAccount:
     metadata:
       name: scmessenger-staging-service-account
@@ -79,7 +79,7 @@ scMessenger:
         nodaemon=true
 
         [inet_http_server]
-        port = 127.0.0.1:9001
+        port = 
         
         [program:scmessenger-staging-supervisor]
         process_name=%(program_name)s_%(process_num)02d
