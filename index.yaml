@@ -2,6 +2,17 @@ apiVersion: v1
 entries:
   scm-chart:
   - apiVersion: v2
+    appVersion: 0.2.6
+    created: "2024-06-13T08:50:40.797383407Z"
+    description: A Helm chart for Kubernetes
+    digest: dd417d6688cf190fbad73ff15314ec22a0a50de88573914130fdec09e55e1364
+    icon: https://cdn.salesconnection.my/pages/image/sales-conn-logo-fullcolor+(1).webp
+    name: scm-chart
+    type: application
+    urls:
+    - https://github.com/SalesConnection/scm-helm-chart/releases/download/scm-chart-0.2.6/scm-chart-0.2.6.tgz
+    version: 0.2.6
+  - apiVersion: v2
     appVersion: 0.2.5
     created: "2024-06-13T08:20:27.514024448Z"
     description: A Helm chart for Kubernetes
@@ -23,4 +34,4 @@ entries:
     urls:
     - https://github.com/SalesConnection/scm-helm-chart/releases/download/scm-chart-0.1.2/scm-chart-0.1.2.tgz
     version: 0.1.2
-generated: "2024-06-13T08:20:27.514036972Z"
+generated: "2024-06-13T08:50:40.797396251Z"
