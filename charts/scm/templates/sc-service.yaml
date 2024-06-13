@@ -1,0 +1,13 @@
+{{- if .Values.scMessenger.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.scMessenger.service.metadata.name }}
+spec:
+  selector:
+    app: {{ .Values.scMessenger.app }}
+  ports:
+    - protocol: {{ .Values.scMessenger.service.spec.protocol }}
+      port: {{ .Values.scMessenger.service.spec.port }}
+      targetPort: {{ $.Values.scMessenger.service.spec.targetPort }}
+{{- end }}

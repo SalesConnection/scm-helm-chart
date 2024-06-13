@@ -1,0 +1,10 @@
+{{- if .Values.scMessenger.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.scMessenger.supervisorConfigMap.metadata.name }}
+  labels:
+    name: {{ .Values.scMessenger.supervisorConfigMap.metadata.labels.name }}
+data:
+  {{- toYaml .Values.scMessenger.supervisorConfigMap.data | nindent 2 }}
+{{- end }}

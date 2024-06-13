@@ -1,0 +1,44 @@
+{{- if .Values.scMessenger.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  {{ .Values.scMessenger.deployment.metadata.name }}
+spec:
+  replicas: {{ .Values.scMessenger.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.scMessenger.app }}   
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.scMessenger.app }}
+    spec:
+      serviceAccountName: {{ .Values.scMessenger.deployment.serviceAccountName }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: starrocks25
+                    operator: NotIn
+                    values:
+                      - owned
+      volumes:
+        - name: {{ .Values.scMessenger.deployment.volumes.name }}
+          configMap:
+            name: {{ .Values.scMessenger.deployment.volumes.configMap.name }}
+      containers:
+        - name: {{ .Values.scMessenger.deployment.containers.name }}
+          image: {{ .Values.scMessenger.deployment.containers.image }}
+          imagePullPolicy: {{ .Values.scMessenger.deployment.containers.imagePullPolicy }}
+          ports:
+            - name: {{ .Values.scMessenger.deployment.containers.ports.name}}
+              containerPort: {{ .Values.scMessenger.deployment.containers.ports.containerPort }}
+              protocol: {{ .Values.scMessenger.deployment.containers.ports.protocol }}
+          volumeMounts:
+            - name: {{ .Values.scMessenger.deployment.containers.volumeMounts.name }}
+              mountPath: {{ .Values.scMessenger.deployment.containers.volumeMounts.mountPath }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.scMessenger.deployment.containers.envFrom.configMapRef.name }}
+{{- end }}

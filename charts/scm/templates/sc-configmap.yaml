@@ -1,0 +1,11 @@
+# trunk-ignore(yamllint/syntax)
+{{- if .Values.scMessenger.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.scMessenger.configMap.metadata.name }}
+  labels:
+    name: {{ .Values.scMessenger.configMap.metadata.labels.name }}
+data:
+  {{- toYaml .Values.scMessenger.configMap.data | nindent 2 }}
+{{- end }}

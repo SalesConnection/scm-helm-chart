@@ -1,0 +1,95 @@
+# trunk-ignore-all(prettier)
+scMessenger:
+  enabled: true
+  app: scmessenger-staging
+  replicas: 1
+  deployment:
+    metadata:
+      name: scmessenger-staging-deployment
+    volumes:
+      name: scmessenger-staging-config-volume
+      configMap:
+        name: scmessenger-staging-supervisor
+    serviceAccountName: scmessenger-staging-service-account
+    containers:
+      name: scmessenger-staging-container
+      image: 672944514151.dkr.ecr.ap-southeast-1.amazonaws.com/sc-messenger:v1.1.2-alpha.4
+      imagePullPolicy: Always
+      ports: 
+        name: http
+        containerPort: 80
+        protocol: TCP
+      volumeMounts:
+        name: scmessenger-staging-config-volume
+        mountPath: /config
+      envFrom:
+        configMapRef:
+          name: scmessenger-staging-config  
+  configMap:
+    metadata:
+      name: scmessenger-staging-config
+      labels: 
+        name: scmessenger-staging  
+    data:  
+      APP_NAME: ""
+      APP_ENV: ""
+      APP_KEY: ""
+      APP_DEBUG: ""
+      APP_URL: ""
+      APP_TIMEZONE: ""
+      APP_PORT: ""
+      LOG_CHANNEL: ""
+      LOG_SLACK_WEBHOOK_URL: ""
+      DB_CONNECTION: ""
+      DB_HOST: ""
+      DB_PORT: ""
+      DB_DATABASE: ""
+      DB_USERNAME: ""
+      DB_PASSWORD: ""
+      AWS_BUCKET: ""
+      CACHE_DRIVER: ""
+      QUEUE_CONNECTION: ""
+      SQS_PREFIX: ""
+      SQS_QUEUE: ""
+      AWS_DEFAULT_REGION: ""
+      ESMS_ENDPOINT: ""
+      DD_ENV: ""
+  serviceAccount:
+    metadata:
+      name: scmessenger-staging-service-account
+      labels:
+        app: scmessenger-staging
+      annotations:
+        eks.amazonaws.com/role-arn: arn:aws:iam::672944514151:role/sc-messenger
+  service:
+    metadata:
+      name: scmessenger-staging-service
+    spec:
+      protocol: TCP
+      port: 80
+      targetPort: http
+  supervisorConfigMap:
+    metadata:
+      name: scmessenger-staging-supervisor
+      labels:
+        name: scmessenger-staging-supervisor 
+    data:
+      scmessenger-staging-supervisor.conf: |-
+        [supervisord]
+        nodaemon=true
+
+        [inet_http_server]
+        port = 
+        
+        [program:scmessenger-staging-supervisor]
+        process_name=%(program_name)s_%(process_num)02d
+        environment=DD_TRACE_CLI_ENABLED="1",DD_TRACE_GENERATE_ROOT_SPAN="0",DD_TRACE_AUTO_FLUSH_ENABLED="1",DD_ENV="staging",DD_SERVICE="scmessenger-staging-supervisor"
+        command=/usr/local/bin/php /var/www/artisan queue:work sqs --queue=sqs --timeout=300
+        autostart=true
+        autorestart=true
+        user=root
+        numprocs=1
+        redirect_stderr=true
+        stdout_logfile=/dev/fd/1
+        stdout_logfile_maxbytes=0
+        stdout_logfile_backups=0
