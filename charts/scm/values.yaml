@@ -15,22 +15,25 @@ scMessenger:
       name: scmessenger-staging-container
       image: 672944514151.dkr.ecr.ap-southeast-1.amazonaws.com/sc-messenger:v1.1.2-alpha.4
       imagePullPolicy: Always
-      ports: 
+      ports:
         name: http
         containerPort: 80
         protocol: TCP
       volumeMounts:
         name: scmessenger-staging-config-volume
         mountPath: /config
+      env:
+        name: DD_ENV
+        value: staging
       envFrom:
         configMapRef:
-          name: scmessenger-staging-config  
+          name: scmessenger-staging-config
   configMap:
     metadata:
       name: scmessenger-staging-config
-      labels: 
-        name: scmessenger-staging  
-    data:  
+      labels:
+        name: scmessenger-staging
+    data:
       APP_NAME: ""
       APP_ENV: ""
       APP_KEY: ""
@@ -72,15 +75,15 @@ scMessenger:
     metadata:
       name: scmessenger-staging-supervisor
       labels:
-        name: scmessenger-staging-supervisor 
+        name: scmessenger-staging-supervisor
     data:
       scmessenger-staging-supervisor.conf: |-
         [supervisord]
         nodaemon=true
 
         [inet_http_server]
-        port = 
-        
+        port = ""
+
         [program:scmessenger-staging-supervisor]
         process_name=%(program_name)s_%(process_num)02d
         environment=DD_TRACE_CLI_ENABLED="1",DD_TRACE_GENERATE_ROOT_SPAN="0",DD_TRACE_AUTO_FLUSH_ENABLED="1",DD_ENV="staging",DD_SERVICE="scmessenger-staging-supervisor"
